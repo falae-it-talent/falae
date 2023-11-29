@@ -6,59 +6,63 @@ on:
     types:
       - completed
 
-  workflow_dispatch:
-  
 jobs:
   CD:
     if: github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
+    env:
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+
     steps:
       - name: Configure SSH AWS
         run: |
           mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/aws-cloud.key
           chmod 600 ~/.ssh/aws-cloud.key
-          cat >>~/.ssh/config <<END
+          cat >>~/.ssh/config <<EOF
           Host aws-cloud
-            HostName $SSH_HOST
-            User $SSH_USER
+            HostName ${{ secrets.SSH_HOST }}
+            User ${{ secrets.SSH_USER }}
             IdentityFile ~/.ssh/aws-cloud.key
             StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: ${{ secrets.SSH_USER }}
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-          SSH_HOST: ${{ secrets.SSH_HOST }}
+          EOF
 
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy Application and Restore Database
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
+      - name: Build and Push Docker Images
         run: |
-          # Deploy Docker Compose on Google Cloud
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker-compose -f /falae/docker-compose.yml up -d
+          docker build -t guilherme2041/falae-app:latest ./caminho/para/diretorio/do/app
+          docker push guilherme2041/falae-app:latest
+          
+          docker build -t guilherme2041/falae-nginx:latest ./caminho/para/diretorio/do/proxy
+          docker push guilherme2041/falae-nginx:latest
 
-          # Stop and Remove Old Containers on Google Cloud
-          ssh google-cloud 'sudo docker-compose -f /falae/docker-compose.yml down || true'
+      - name: Pull latest Docker images
+        run: |
+          ssh aws-cloud 'sudo docker-compose -f /falae/docker-compose.yml pull'
 
-          # Pull and Run Docker Compose on Google Cloud
-          ssh google-cloud 'sudo docker-compose -f /falae/docker-compose.yml pull'
-          ssh google-cloud 'sudo docker-compose -f /falae/docker-compose.yml up -d'
+      - name: Deploy Application
+        run: |
+          ssh aws-cloud 'sudo docker-compose -f /falae/docker-compose.yml up -d'
 
-          # Deploy the application on AWS
+      - name: Restore Database
+        run: |
           ssh aws-cloud "cd /falae"
           ssh aws-cloud "touch .env"
           ssh aws-cloud "cat /etc/.env > /home/github/falae/.env"
-          ssh aws-cloud "docker-compose down"
-          ssh aws-cloud "docker-compose up -d"
           ssh aws-cloud "./restoreDB.sh dump.sql"
+    
+      - name: Remove Unused Docker Images and Containers
+        run: |
+          ssh aws-cloud 'sudo docker image prune -f || true'
+          ssh aws-cloud 'sudo docker container prune -f || true'
 
-  
