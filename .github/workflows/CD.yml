@@ -27,26 +27,38 @@ jobs:
             StrictHostKeyChecking no
           END
         env:
-          SSH_USER: ${{ secrets.AWS_SSH_USER }}
-          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
 
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy the application
+      - name: Deploy Application and Restore Database
+        env:
+          DOCKER_USER: ${{ secrets.DOCKER_USER }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
         run: |
-          if [ "${{ github.event_name }}" == "workflow_run" ]; then
-            # Check if the triggering event was a workflow_run (CI completion)
-            if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
-              # If CI was successful, proceed with deployment
-              ssh aws-cloud "cd falae && touch .env && cat /etc/.env > /home/github/falae/.env && docker compose down && docker compose up -d && ./restoreDB.sh dump.sql"
-            else
-              # If CI failed, log an error and exit
-              echo "CI workflow failed. Deployment aborted."
-              exit 1
-            fi
-          else
-            # If manually triggered, proceed with deployment
-            ssh aws-cloud "cd falae && touch .env && cat /etc/.env > /home/github/falae/.env && docker compose down && docker compose up -d && ./restoreDB.sh dump.sql"
-          fi
+          # Deploy Docker Compose on Google Cloud
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker-compose -f /falae/docker-compose.yml up -d
+
+          # Stop and Remove Old Containers on Google Cloud
+          ssh google-cloud 'sudo docker-compose -f /falae/docker-compose.yml down || true'
+
+          # Pull and Run Docker Compose on Google Cloud
+          ssh google-cloud 'sudo docker-compose -f /falae/docker-compose.yml pull'
+          ssh google-cloud 'sudo docker-compose -f /falae/docker-compose.yml up -d'
+
+          # Deploy the application on AWS
+          ssh aws-cloud "cd /falae"
+          ssh aws-cloud "touch .env"
+          ssh aws-cloud "cat /etc/.env > /home/github/falae/.env"
+          ssh aws-cloud "docker-compose down"
+          ssh aws-cloud "docker-compose up -d"
+          ssh aws-cloud "./restoreDB.sh dump.sql"
+
+  
