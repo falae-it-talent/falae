@@ -1,69 +1,67 @@
 name: CI
+
 on:
   push:
-    branches: [master]
+    branches:
+      - master
   pull_request:
-    branches: [master]
+    branches:
+      - master
 
 jobs:
-  test:
-    runs-on: ubuntu-latest 
-
-    services:
-      mysql:
-        image: guilherme2041/falae-app
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        ports: ['3306:3306']
+  build:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.0.6'
 
-      - uses: Borales/actions-yarn@v2
-        with:
-          cmd: install
-
-      - name: Install Dependencies
+      - name: Create .env file
         run: |
-          sudo apt install -yqq default-libmysqlclient-dev
-          gem install bundler 
+          echo "DB_USER=${{ secrets.DB_USER }}" > .env.template
+          echo "DB_NAME=${{ secrets.DB_NAME }}" >> .env.template
+          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env.template
+          echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env.template
+          echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env.template
+          echo "RAILS_ENV=${{ secrets.RAILS_ENV }}" >> .env.template
+          echo "SENDGRID_APIKEY=${{ secrets.SENDGRID_APIKEY }}" >> .env.template
+          echo "FALAE_IMAGES_PATH=${{ secrets.FALAE_IMAGES_PATH }}" >> .env.template
+          echo "SECRET_KEY_BASE=${{ secrets.SECRET_KEY_BASE }}" >> .env.template
+          envsubst < .env.template > .env
+          
+      - name: Display .env content
+        run: cat .env
+        
+      - name: Setup Docker Compose
+        run: docker-compose --env-file .env up -d
+
+      - name: Check Docker Containers
+        run: |
+          sleep 10
+          docker-compose ps
+
+      - name: Change to directory and run script
+        run: |
+          ls  # List the contents of the current directory for debugging purposes
+          chmod +x restoreDB.sh
+          ./restoreDB.sh dump.sql
 
       - name: Install Gems
         run: |
-          bundle config set path vendor/bundle
-          bundle install --jobs 4 --retry 3
+          gem install bundler
+          bundle install
 
-      - name: Setup database
+          
+      - name: Run Tests
         env:
-          DB_DATABASE: ${{ secrets.DB_NAME }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          RAILS_ENV: ${{ secrets.RAILS_ENV }}
-          WITH_COVERAGE: true
-          DISABLE_SPRING: 1
+           DATABASE_URL: "mysql2://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}"
+           RAILS_ENV: test
         run: |
-          bundle exec rails db:prepare
-          bundle exec rake test
-
-      - name: Build and test with rspec
-        env:
-          DB_DATABASE: ${{ secrets.DB_NAME }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          RAILS_ENV: ${{ secrets.RAILS_ENV }}
-        run: |
-          bundle exec rspec spec
-
-      #- name: Create Coverage Artifact
-       # uses: actions/upload-artifact@v2
-       # with:
-       #   name: code-coverage
-       #   path: coverage/
-#
+           bundle exec rspec
+    
+  
