@@ -1,0 +1,51 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: CI
+    types:
+      - completed
+
+  workflow_dispatch:
+  
+jobs:
+  CD:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Configure SSH AWS
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+          chmod 600 ~/.ssh/aws-cloud.key
+          cat >>~/.ssh/config <<END
+          Host aws-cloud
+            HostName $SSH_HOST
+            User $SSH_USER
+            IdentityFile ~/.ssh/aws-cloud.key
+            StrictHostKeyChecking no
+          END
+        env:
+          SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Deploy the application
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_run" ]; then
+            # Check if the triggering event was a workflow_run (CI completion)
+            if [ "${{ github.event.workflow_run.conclusion }}" == "success" ]; then
+              # If CI was successful, proceed with deployment
+              ssh aws-cloud "cd falae && touch .env && cat /etc/.env > /home/github/falae/.env && docker compose down && docker compose up -d && ./restoreDB.sh dump.sql"
+            else
+              # If CI failed, log an error and exit
+              echo "CI workflow failed. Deployment aborted."
+              exit 1
+            fi
+          else
+            # If manually triggered, proceed with deployment
+            ssh aws-cloud "cd falae && touch .env && cat /etc/.env > /home/github/falae/.env && docker compose down && docker compose up -d && ./restoreDB.sh dump.sql"
+          fi
