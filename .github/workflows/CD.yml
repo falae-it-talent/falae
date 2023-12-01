@@ -1,7 +1,7 @@
 name: CD
 
 on:
-  pull-request:
+  push:
     branches:
       - ci-test-01
   workflow_run:
