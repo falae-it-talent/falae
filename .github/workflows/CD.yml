@@ -43,11 +43,11 @@ jobs:
 
       - name: Build and Push Docker Images
         run: |
-          docker build -t guilherme2041/falae-app:latest ./caminho/para/diretorio/do/app
-          docker push guilherme2041/falae-app:latest
+          docker build -t ${{secrets.DOCKER_USERNAME}}/falae-app:latest ./caminho/para/diretorio/do/app
+          docker push ${{secrets.DOCKER_USERNAME}}/falae-app:latest
           
-          docker build -t guilherme2041/falae-nginx:latest ./caminho/para/diretorio/do/proxy
-          docker push guilherme2041/falae-nginx:latest
+          docker build -t ${{secrets.DOCKER_USERNAME}}/falae-nginx:latest ./caminho/para/diretorio/do/proxy
+          docker push ${{secrets.DOCKER_USERNAM}}/falae-nginx:latest
 
       - name: Pull latest Docker images
         run: |
