@@ -5,7 +5,7 @@ on:
     branches:
       - ci-test-01
   workflow_run:
-    workflows: CD 
+    workflows: CI
     types:
       - completed 
 
