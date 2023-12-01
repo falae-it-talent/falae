@@ -16,11 +16,6 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SSH_USER: ${{ secrets.SSH_USER }}
-      SSH_KEY: ${{ secrets.SSH_KEY }}
-      SSH_HOST: ${{ secrets.SSH_HOST }}
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       DB_NAME: ${{ secrets.DB_NAME }}
@@ -29,15 +24,19 @@ jobs:
       - name: Configure SSH AWS
         run: |
           mkdir -p ~/.ssh/
-          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/aws-cloud.key
+          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
           chmod 600 ~/.ssh/aws-cloud.key
-          cat >>~/.ssh/config <<EOF
+          cat >>~/.ssh/config <<END
           Host aws-cloud
-            HostName ${{ secrets.SSH_HOST }}
-            User ${{ secrets.SSH_USER }}
+            HostName $SSH_HOST
+            User $SSH_USER
             IdentityFile ~/.ssh/aws-cloud.key
             StrictHostKeyChecking no
-          EOF
+          END
+        env:
+          SSH_USER: ${{ secrets.AWS_SSH_USER }}
+          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
 
       - name: Checkout repository
         uses: actions/checkout@v3
