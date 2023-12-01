@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - ci-test-01
-  pull_request:
-    branches:
-      - ci-test-01
 
 jobs:
   build:
