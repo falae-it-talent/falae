@@ -47,16 +47,12 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker build . -t $DOCKER_USER/falae:latest 
-          docker push $DOCKER_USER/falae:latest
-
-      - name: Build and Push Docker Images
-        run: |
-          docker build -t guilherme2041/falae-app:latest .
-          docker push guilherme2041/falae-app:latest
           
-          docker build -t guilherme2041/falae-nginx:latest ./.docker/nginx
-          docker push guilherme2041/falae-nginx:latest
+          docker build . -t $DOCKER_USER/falae-app:latest 
+          docker push $DOCKER_USER/falae-app:latest
+
+          docker build . -t $DOCKER_USER/falae-nginx:latest
+          docker push $DOCKER_USER/falae-nginx:latest
 
       - name: Pull latest Docker images
         run: |
