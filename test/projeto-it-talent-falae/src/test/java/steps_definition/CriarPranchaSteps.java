@@ -15,8 +15,9 @@ public class CriarPranchaSteps extends BaseSteps {
     private CriarPranchaPage page = new CriarPranchaPage();
 
     @Dado("o usuario clicar no botao do {string}")
-    public void o_usuario_clicar_no_botao_do(String string) {
-        page.criarPrancha();
+    public void o_usuario_clicar_no_botao_do(String escolha) {
+        screenshot();
+        page.criarPrancha(escolha);
     }
 
     @Quando("o usuario preencher o campo nome da prancha")

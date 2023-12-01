@@ -2,6 +2,7 @@ package steps_definition;
 
 import base.BaseSteps;
 import io.cucumber.java.pt.*;
+import org.junit.Assert;
 import page_objects.PranchaPage;
 
 public class PranchaSteps extends BaseSteps {
@@ -10,6 +11,7 @@ public class PranchaSteps extends BaseSteps {
 
     @Quando("o usuario clicar na prancha")
     public void o_usuario_clicar_na_prancha() {
+        screenshot();
        page.selecionarPrancha();
     }
     @Quando("o ususario confirmar a exclusao")
@@ -23,4 +25,15 @@ public class PranchaSteps extends BaseSteps {
         page.selecionarApagarPrancha(botao);
     }
 
+
+    @Quando("o ususario clicar no botao  {string}")
+    public void oUsusarioClicarNoBotao(String string) {
+      page.clicarbotaoExporta();
+    }
+    @Entao("o sistema envia um arquivo para pagina de download do computador do usuario")
+    public void oSistemaEnviaUmArquivoParaPaginaDeDownloadDoComputadorDoUsuario() {
+        System.out.println(page.retornarPranchaBaixada());
+    }
 }
+
+

@@ -20,7 +20,7 @@ public class CriarItensSteps extends BaseSteps {
 
     @Dado("o usuario está logado no sistema")
     public void o_usuario_está_logado_no_sistema() {
-        page.clicarLink("Entrar");
+       // page.clicarLink("Entrar");
         page.escreverEmail("testesfalae@gmail.com");
         page.escreverSenha("123456");
         page.botaoCriar();

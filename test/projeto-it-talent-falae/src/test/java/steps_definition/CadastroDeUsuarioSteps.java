@@ -69,7 +69,7 @@ public class CadastroDeUsuarioSteps  extends BaseSteps {
 
     @Então("o sistema exibe uma mensagem: {string}")
     public void o_sistema_exibe_uma_mensagem(String mensagem) {
-        Assert.assertEquals(page.MensagemDeSucesso(), mensagem);
+        Assert.assertEquals(mensagem, page.MensagemDeSucesso());
         screenshot();
     }
 
@@ -80,7 +80,7 @@ public class CadastroDeUsuarioSteps  extends BaseSteps {
 
     @Então("o sistema exibe uma mensagem de erro: {string}")
     public void o_sistema_exibe_uma_mensagem_de_erro(String msgErro) {
-        Assert.assertEquals(page.msgErro(), msgErro);
+        Assert.assertEquals(msgErro, page.msgErro());
         screenshot();
     }
 

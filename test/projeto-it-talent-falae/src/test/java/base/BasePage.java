@@ -179,9 +179,10 @@ public class BasePage extends DriverFactory {
         clicar(By.xpath("//button[.='"+texto+"']"));
     }
 
-    public boolean retornarArquivo(String nomeDoArquivo, String tipo){
-        String arquivo = "C:\\Users\\Downloads\\"+nomeDoArquivo+"."+tipo;
-        return new File(arquivo).exists();
+    public String  retornarArquivo(String nomeDoArquivo, String tipo){
+        String arquivo = "C:\\Users\\"+System.getProperty("user.name")+"\\Downloads\\"+nomeDoArquivo+"."+tipo;
+       // return new File(arquivo).exists();
+        return  arquivo;
 
     }
 }
