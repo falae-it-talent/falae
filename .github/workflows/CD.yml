@@ -60,7 +60,7 @@ jobs:
             echo "The falae repository already exists. Skipping clone."
           else
             echo "The falae repository does not exist. Clonning it."
-            ssh aws-cloud "cd /home/ubuntu/falae && git clone https://github.com/falae-it-talent/falae.git"  
+            ssh aws-cloud "git clone https://github.com/falae-it-talent/falae.git && cd /home/ubuntu/falae"  
           fi
 
       - name: Create .env file
