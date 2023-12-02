@@ -56,10 +56,10 @@ jobs:
 
       - name: Clonning repository
         run: |
-          if ssh aws-cloud "[ -f /home/ubuntu/falae ]"; then
+          if: ssh aws-cloud "[ -f /home/ubuntu/falae ]"; then
            ssh aws-cloud "sudo rm -Rf /home/ubuntu/falae"
            ssh aws-cloud "git clone https://github.com/falae-it-talent/falae.git"
-          else
+          else:
             ssh aws-cloud "git clone https://github.com/falae-it-talent/falae.git"
           fi
 
