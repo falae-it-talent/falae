@@ -56,11 +56,11 @@ jobs:
 
       - name: Pull latest Docker images
         run: |
-          ssh aws-cloud 'sudo docker-compose -f /falae/docker-compose.yml pull'
+          ssh aws-cloud 'sudo docker compose -f /falae/docker-compose.yml pull'
 
       - name: Deploy Application
         run: |
-          ssh aws-cloud 'sudo docker-compose -f /falae/docker-compose.yml up -d'
+          ssh aws-cloud 'sudo docker compose -f /falae/docker-compose.yml up -d'
 
       - name: Restore Database
         run: |
