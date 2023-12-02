@@ -72,11 +72,11 @@ jobs:
             ssh aws-cloud "echo SECRET_KEY_BASE=82a79eb5d2a9eb072265d625817788d829c2203c7ff7ff6511b063cc5e38ab917738be87732c253f1b543064e793bd0715428be4e41622b1a9328bd8185e74dd >> /home/ubuntu/falae/.env"
 
 
-      - name: Remove Docker Images and Containers
-        run: |
-          ssh aws-cloud "sudo docker rm $(docker ps -a -q) -f"
-          ssh aws-cloud "sudo docker rmi $(docker images -q)"
-          ssh aws-cloud "sleep 10"
+      #- name: Remove Docker Images and Containers
+        #run: |
+          #ssh aws-cloud "sudo docker ps -qa | xargs docker rm -f"
+          #ssh aws-cloud "sudo docker images -qa | xargs docker rmi -f"
+          #ssh aws-cloud "sleep 10"
 
 
       - name: Pull latest Docker images
