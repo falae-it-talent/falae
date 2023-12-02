@@ -74,10 +74,8 @@ jobs:
 
       - name: Remove Unused Docker Images and Containers
         run: |
-          ssh aws-cloud "sudo docker $(docker ps -a -q) -f"
-          ssh aws-cloud "sudo docker $(docker rmi -q)"
-          ssh aws-cloud "sudo docker image prune -f || true"
-          ssh aws-cloud "sudo docker container prune -f || true"
+          ssh aws-cloud "sudo docker rm $(docker ps -a -q) -f"
+          ssh aws-cloud "sudo docker rmi $(docker images -q)"
           ssh aws-cloud "sleep 10"
 
 
