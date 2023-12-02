@@ -61,16 +61,15 @@ jobs:
 
       - name: Create .env file
         run: |
-            ssh aws-cloud "cd /home/ubuntu/falae/"
-            ssh aws-cloud "echo DB_USER=root > .env"
-            ssh aws-cloud "echo DB_NAME=falae >> .env"
-            ssh aws-cloud "echo DB_PASSWORD=falae@pass >> .env"
-            ssh aws-cloud "echo DB_HOST=db >> .env"
-            ssh aws-cloud "echo DB_PORT=3306 >> .env"
-            ssh aws-cloud "echo RAILS_ENV=development >> .env"
-            ssh aws-cloud "echo SENDGRID_APIKEY= >> .env"
-            ssh aws-cloud "echo FALAE_IMAGES_PATH=/images >> .env"
-            ssh aws-cloud "echo SECRET_KEY_BASE=82a79eb5d2a9eb072265d625817788d829c2203c7ff7ff6511b063cc5e38ab917738be87732c253f1b543064e793bd0715428be4e41622b1a9328bd8185e74dd >> .env"
+            ssh aws-cloud "echo DB_USER=root > /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo DB_NAME=falae >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo DB_PASSWORD=falae@pass >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo DB_HOST=db >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo DB_PORT=3306 >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo RAILS_ENV=development >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo SENDGRID_APIKEY= >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo FALAE_IMAGES_PATH=/images >> /home/ubuntu/falae/.env"
+            ssh aws-cloud "echo SECRET_KEY_BASE=82a79eb5d2a9eb072265d625817788d829c2203c7ff7ff6511b063cc5e38ab917738be87732c253f1b543064e793bd0715428be4e41622b1a9328bd8185e74dd >> /home/ubuntu/falae/.env"
 
       - name: Pull latest Docker images
         run: |
@@ -78,9 +77,8 @@ jobs:
 
       - name: Deploy Application
         run: |
-          ssh aws-cloud "cd /home/ubuntu/falae/"
-          ssh aws-cloud "sudo docker compose -f docker-compose.yml up -d"
-          ssh aws-cloud "sudo su && ./restoreDB.sh dump.sql"
+          ssh aws-cloud "sudo docker compose -f /home/ubuntu/falae/docker-compose.yml up -d"
+          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo su && ./restoreDB.sh dump.sql"
     
       - name: Remove Unused Docker Images and Containers
         run: |
