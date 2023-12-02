@@ -74,7 +74,7 @@ jobs:
 
       - name: Stop & Remove Docker Images and Containers
         run: |
-          ssh aws-cloud "sudo docker compose down --volumes --rmi all"
+          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo docker compose down --volumes --rmi all"
           ssh aws-cloud "sleep 10"
 
 
