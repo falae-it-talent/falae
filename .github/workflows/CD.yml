@@ -55,11 +55,13 @@ jobs:
           docker push $DOCKER_USER/falae-nginx:latest
 
       - name: Clonning repository
+        env:
+          REPOSITORY: ssh aws-cloud "[ -f /home/ubuntu/falae ]"
         run: |
-          if: ssh aws-cloud "[ -f /home/ubuntu/falae ]"; then
+          if $REPOSITORY; then
            ssh aws-cloud "sudo rm -Rf /home/ubuntu/falae"
            ssh aws-cloud "git clone https://github.com/falae-it-talent/falae.git"
-          else:
+          else
             ssh aws-cloud "git clone https://github.com/falae-it-talent/falae.git"
           fi
 
