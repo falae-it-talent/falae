@@ -75,8 +75,6 @@ jobs:
       - name: Stop & Remove Docker Images and Containers
         run: |
           ssh aws-cloud "sudo docker compose down"
-          ssh aws-cloud "sudo docker ps -qa | xargs docker rm -f"
-          ssh aws-cloud "sudo docker images -qa | xargs docker rmi -f"
           ssh aws-cloud "sleep 10"
 
 
