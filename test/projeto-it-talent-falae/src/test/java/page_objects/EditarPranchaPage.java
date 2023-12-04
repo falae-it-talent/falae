@@ -7,7 +7,7 @@ public class EditarPranchaPage extends BasePage {
 
     private final By campoNome = By.cssSelector("#spreadsheet_name");
     private final By campoPaginaInicial = By.cssSelector("#spreadsheet_initial_page");
-    public final By segundaOpcaoDaPaginaInicial = By.cssSelector(" #spreadsheet_initial_page > option:nth-child(2)");
+    private final By segundaOpcaoDaPaginaInicial = By.xpath("//*[@id=\"spreadsheet_initial_page\"]/option[2]");
 
 
     public void escreverNomeDaPrancha(String nomeEditado){
@@ -16,7 +16,7 @@ public class EditarPranchaPage extends BasePage {
     }
 
     public void selecionarOutraPaginaInicial(){
-//        waitElementVisible(campoPaginaInicial,2);
+        waitElementVisible(campoPaginaInicial,2);
         selecionarCombo(campoPaginaInicial, "teste1");
     }
 }

@@ -101,6 +101,19 @@ public class BasePage extends DriverFactory {
         retorno.add(segundoTexto);
         return  retorno;
     }
+    public List<String> posicoesListaDeTextoComTres(String texto1, String separacao, int posicao1, int posicao2, int posicao3){
+        List<String> nomes = Arrays.asList(texto1.split(separacao));
+        String primeiroTexto = nomes.get(posicao1);
+        String segundoTexto = nomes.get(posicao2);
+        String terceiroTexto = nomes.get(posicao3);
+        List<String> retorno = new ArrayList<>();
+        retorno.add(primeiroTexto);
+        retorno.add(segundoTexto);
+        retorno.add(terceiroTexto);
+        return  retorno;
+    }
+
+
     public String posicaoTextoStringEspecifica(String texto, String separacao, int posicao, int posicaoString){
 
         List<String> nomes = Arrays.asList(texto.split(separacao));

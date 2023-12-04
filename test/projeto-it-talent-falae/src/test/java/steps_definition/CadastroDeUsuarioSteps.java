@@ -101,10 +101,11 @@ public class CadastroDeUsuarioSteps  extends BaseSteps {
 
     @Então("o sistema exibe uma mensagem de erro: {string} {string}")
     public void o_sistema_exibe_uma_mensagem_de_erro(String string, String string2) {
+        screenshot();
         List<String> retornoMsg = new ArrayList<>();
         retornoMsg.add(string);
         retornoMsg.add(string2);
-        Assert.assertEquals(page.msgsDeErros(), retornoMsg);
+        Assert.assertEquals(retornoMsg, page.msgsDeErros());
     }
 
     @Quando("o usuario preencher o campo email com um email invalido")

@@ -11,7 +11,6 @@ public class PranchaSteps extends BaseSteps {
 
     @Quando("o usuario clicar na prancha")
     public void o_usuario_clicar_na_prancha() {
-        screenshot();
        page.selecionarPrancha();
     }
     @Quando("o ususario confirmar a exclusao")

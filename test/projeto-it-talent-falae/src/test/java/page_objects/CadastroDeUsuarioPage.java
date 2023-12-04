@@ -69,4 +69,8 @@ public class CadastroDeUsuarioPage extends BasePage {
         return posicoesListaDeTexto(obterValorPorTexto(MensagemdeErros), "\n", 1, 2);
     }
 
+    public List<String> msgsDeErrosComTres(){
+        return posicoesListaDeTextoComTres(obterValorPorTexto(MensagemdeErros), "\n", 1, 2, 3);
+    }
+
 }
