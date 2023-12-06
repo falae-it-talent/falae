@@ -56,9 +56,12 @@ jobs:
 
       - name: Build and Push falae-nginx
         run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/arm64 --push
+      
+      - name: Create directory if not exists
+        run: ssh aws-cloud "mkdir -p /home/ubuntu/falae/"
         
       - name: Copy docker-compose.yml to the instance
-        run: scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/
+        run: scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/docker-compose.yml
 
       - name: Stop & Remove Docker Images and Containers
         run: |
