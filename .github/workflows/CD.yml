@@ -4,10 +4,6 @@ on:
   push:
     branches:
       - ci-test-01
-  #workflow_run:
-    #workflows: CI
-    #types:
-      #- completed
   workflow_dispatch:
 
 jobs:
@@ -54,29 +50,13 @@ jobs:
           docker build . -t $DOCKER_USER/falae-nginx:latest
           docker push $DOCKER_USER/falae-nginx:latest
 
-      - name: Clonning repository
-        run: |
-           ssh aws-cloud "sudo rm -Rf /home/ubuntu/falae"
-           ssh aws-cloud "git clone -b ci-test-01 https://github.com/falae-it-talent/falae.git"
-
-      - name: Create .env file
-        run: |
-            ssh aws-cloud "echo DB_USER=root > /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo DB_NAME=falae >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo DB_PASSWORD=falae@pass >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo DB_HOST=db >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo DB_PORT=3306 >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo RAILS_ENV=development >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo SENDGRID_APIKEY= >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo FALAE_IMAGES_PATH=/images >> /home/ubuntu/falae/.env"
-            ssh aws-cloud "echo SECRET_KEY_BASE=82a79eb5d2a9eb072265d625817788d829c2203c7ff7ff6511b063cc5e38ab917738be87732c253f1b543064e793bd0715428be4e41622b1a9328bd8185e74dd >> /home/ubuntu/falae/.env"
-
+      - name: Copy docker-compose.yml to the instance
+        run: scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/
 
       - name: Stop & Remove Docker Images and Containers
         run: |
-          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo docker compose down --volumes --rmi all"
+          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo docker compose down --rmi all"
           ssh aws-cloud "sleep 10"
-
 
       - name: Pull latest Docker images
         run: |
@@ -86,4 +66,4 @@ jobs:
         run: |
           ssh aws-cloud "sudo docker compose -f /home/ubuntu/falae/docker-compose.yml up -d"
           ssh aws-cloud "sleep 20"
-          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo su && ./restoreDB.sh dump.sql"
+         
