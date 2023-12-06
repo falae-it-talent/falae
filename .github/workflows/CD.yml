@@ -52,10 +52,10 @@ jobs:
           docker buildx inspect default --bootstrap
 
       - name: Build and Push falae-app
-        run: docker buildx build . -t '$DOCKER_USER/falae-app:latest' --platform linux/arm64 --push
+        run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/arm64 --push
 
       - name: Build and Push falae-nginx
-        run: docker buildx build . -t '$DOCKER_USER/falae-nginx:latest' --platform linux/arm64 --push
+        run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/arm64 --push
         
       - name: Copy docker-compose.yml to the instance
         run: scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/
