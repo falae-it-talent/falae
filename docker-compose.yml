@@ -10,6 +10,8 @@ services:
       - falae-net
     env_file:
       - ./.env
+    volumes:
+      - mysql-data:/images
 
   proxy:
     depends_on:
