@@ -42,17 +42,20 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+      
+      - name: Update Buildx
+        run: docker buildx install
 
       - name: Set up Buildx
         run: |
-            docker buildx create --use
-            docker buildx inspect default --bootstrap
+          docker buildx create --use
+          docker buildx inspect default --bootstrap
            
       - name: Build and Push falae-app
-        run: docker buildx build . -t $DOCKER_USER/falae-app:latest --platform linux/arm64 --push
+        run: docker buildx build . -t "$DOCKER_USER/falae-app:latest" --platform linux/arm64 --push
 
       - name: Build and Push falae-nginx
-        run: docker buildx build . -t $DOCKER_USER/falae-nginx:latest --platform linux/arm64 --push
+        run: docker buildx build . -t "$DOCKER_USER/falae-nginx:latest" --platform linux/arm64 --push
         
       - name: Copy docker-compose.yml to the instance
         run: scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/
