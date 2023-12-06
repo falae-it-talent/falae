@@ -45,11 +45,9 @@ jobs:
 
       - name: Set up Buildx
         run: |
-           if [ -z "$(docker buildx inspect default)" ]; then
             docker buildx create --use
             docker buildx inspect default --bootstrap
-           fi
-
+           
       - name: Build and Push falae-app
         run: docker buildx build . -t $DOCKER_USER/falae-app:latest --platform linux/arm64 --push
 
