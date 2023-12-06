@@ -8,8 +8,10 @@ services:
     restart: unless-stopped
     networks:
       - falae-net
-    env_file:
-      - ./.env
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     volumes:
       - mysql-data:/images
 
