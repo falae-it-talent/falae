@@ -50,7 +50,7 @@ jobs:
         run: |
           docker buildx create --use
           docker buildx inspect default --bootstrap
-           
+
       - name: Build and Push falae-app
         run: docker buildx build . -t "$DOCKER_USER/falae-app:latest" --platform linux/arm64 --push
 
