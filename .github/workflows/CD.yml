@@ -47,10 +47,10 @@ jobs:
           docker buildx create --use
           docker buildx inspect default --bootstrap
 
-          docker buildx build . -t $DOCKER_USER/falae-app:latest --platform linux/amd64,linux/arm64 
+          docker buildx build . -t $DOCKER_USER/falae-app:latest --platform linux/amd64,linux/arm64 --push
           docker push $DOCKER_USER/falae-app:latest
 
-          docker buildx build . -t $DOCKER_USER/falae-nginx:latest --platform linux/amd64,linux/arm64 
+          docker buildx build . -t $DOCKER_USER/falae-nginx:latest --platform linux/amd64,linux/arm64 --push
           docker push $DOCKER_USER/falae-nginx:latest
 
       - name: Copy docker-compose.yml to the instance
