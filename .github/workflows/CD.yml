@@ -44,7 +44,7 @@ jobs:
         run: |
           echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
           
-          docker buildx use default
+          docker buildx create --use
           docker buildx inspect default --bootstrap
 
           docker buildx build . -t $DOCKER_USER/falae-app:latest --platform linux/amd64,linux/arm64 
