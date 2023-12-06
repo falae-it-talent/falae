@@ -8,6 +8,8 @@ public class CriarPranchaPage extends BasePage {
     private final By botaoExportarPrancha = By.xpath("//a[@class='button-box']/i[@class='fa fa-upload']");
     private final By botaoEditarPrancha = By.xpath("//a[@class='button-box']/i[@class='fa fa-edit']");
     private final By botaoCriaPagina = By.xpath("//a[@class='button-box']/i[@class='fa fa-plus-circle']");
+    private final By botaoApagarPagina = By.xpath("//a[@class='button-box destroy']/i[@class='fa fa-trash-o']");
+
     private final By nomePrancha = By.id("spreadsheet_name");
 
     private final By MsgSucessPrancha = By.id("notice");
@@ -22,6 +24,10 @@ public class CriarPranchaPage extends BasePage {
         else if(escolha.equals("Criar Página")){
             waitElementVisible(botaoCriaPagina, 2);
             clicar(botaoCriaPagina);
+        } else if(escolha.equals("Apagar")){
+            waitElementVisible(botaoApagarPagina, 2);
+            clicar(botaoApagarPagina);
+
         } else{
             waitElementVisible(botaoExportarPrancha, 2);
             clicar(botaoExportarPrancha);
