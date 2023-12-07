@@ -5,6 +5,10 @@ on:
     branches:
       - ci-test-01 
   workflow_dispatch:
+    inputs:
+      manual-trigger:
+        description: 'Manual trigger for CI'
+        default: 'Run CI'
 
 jobs:
   CI-01:
