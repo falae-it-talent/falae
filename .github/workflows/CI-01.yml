@@ -33,20 +33,18 @@ jobs:
           bundle install
 
       - name: Set up Docker Compose for CI
-        run: docker compose -f docker-compose.yml up -d
+        run: |
+          docker-compose -f docker-compose.yml up -d
+          sleep 10  # Aguarde um tempo para garantir que os contêineres estejam completamente iniciados
 
       - name: Check Docker Containers
-        run: |
-          sleep 10
-          docker compose -f docker-compose.yml ps
+        run: docker-compose -f docker-compose.yml ps
 
-      - name: Change to directory and run script (restoreDB.sh)
+      - name: Restore Database and Run Tests
         run: |
           chmod +x restoreDB.sh
           ./restoreDB.sh dump.sql
-
-      - name: Run RSpec tests
-        run: bundle exec rspec || true
-
-      #- name: Tear down Docker Compose
-       # run: docker-compose -f docker-compose.ci.yml down
+          bundle exec rake db:create RAILS_ENV=test
+          bundle exec rake db:migrate RAILS_ENV=test
+          bundle exec rake restoredb RAILS_ENV=test
+          bundle exec rspec || true
