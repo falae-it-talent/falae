@@ -28,11 +28,21 @@ jobs:
           gem install bundler
           bundle install
 
-      - name: Create and migrate database
+      - name: Set up Docker Compose for CI
+        run: docker compose -f docker-compose.yml up -d
+
+      - name: Check Docker Containers
         run: |
-          bundle exec rails db:create RAILS_ENV=development
-          bundle exec rails db:migrate RAILS_ENV=development
+          sleep 10
+          docker compose -f docker-compose.yml ps
+
+      - name: Change to directory and run script (restoreDB.sh)
+        run: |
+          chmod +x restoreDB.sh
+          ./restoreDB.sh dump.sql
 
       - name: Run RSpec tests
         run: bundle exec rspec
 
+      #- name: Tear down Docker Compose
+       # run: docker-compose -f docker-compose.ci.yml down
