@@ -44,6 +44,6 @@ jobs:
         run: |
           chmod +x restoreDB.sh
           ./restoreDB.sh dump.sql
-          bundle exec rake restoredb RAILS_ENV=test
+
           bundle exec rspec || true
 
