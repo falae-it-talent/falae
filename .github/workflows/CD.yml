@@ -56,10 +56,10 @@ jobs:
           docker buildx inspect default --bootstrap
 
       - name: Build and Push falae-app
-        run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/arm64 --push
+        run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/amd64,linux/arm64 --push
 
       - name: Build and Push falae-nginx
-        run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/arm64 --push
+        run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/amd64,linux/arm64 --push
       
       - name: Create directory if not exists
         run: ssh aws-cloud "mkdir -p /home/ubuntu/falae/"
