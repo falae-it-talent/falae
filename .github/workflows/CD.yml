@@ -69,16 +69,8 @@ jobs:
 
       - name: Stop & Remove Docker Images and Containers
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws-cloud.key aws-cloud "cd /home/ubuntu/falae/ && \
-            DB_USER=${{ secrets.DB_USER }} \
-            DB_PASSWORD=${{ secrets.DB_PASSWORD }} \
-            DB_NAME=${{ secrets.DB_NAME }} \
-            sudo docker compose down --rmi all"
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/aws-cloud.key aws-cloud "sleep 10"
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
+          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo docker compose down --rmi all"
+          ssh aws-cloud "sleep 10"
 
       - name: Pull latest Docker images
         run: |
