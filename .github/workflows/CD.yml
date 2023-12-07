@@ -48,7 +48,11 @@ jobs:
 
       - name: Set up Buildx
         run: |
-          docker buildx create --use
+          if docker buildx inspect default; then
+            docker buildx create --use
+          else
+            docker buildx create --use --name default
+          fi
           docker buildx inspect default --bootstrap
 
       - name: Build and Push falae-app
