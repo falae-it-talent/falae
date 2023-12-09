@@ -67,7 +67,7 @@ jobs:
       - name: Copy docker-compose.yml to the instance
         run: |
           scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/docker-compose.yml
-          scp ./.docker/nginx.conf aws-cloud:/home/ubuntu/falae/nginx.conf
+          scp ./.docker/nginx/nginx.conf aws-cloud:/home/ubuntu/falae/nginx.conf
 
       - name: Stop & Remove Docker Images and Containers
         run: |
