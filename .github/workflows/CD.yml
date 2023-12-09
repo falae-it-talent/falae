@@ -43,23 +43,23 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
       
-      - name: Update Buildx
-        run: docker buildx install
+      #- name: Update Buildx
+        #run: docker buildx install
 
-      - name: Set up Buildx
-        run: |
-          if docker buildx inspect default; then
-            docker buildx create --use
-          else
-            docker buildx create --use --name default
-          fi
-          docker buildx inspect default --bootstrap
+      #- name: Set up Buildx
+        #run: |
+          #if docker buildx inspect default; then
+            #docker buildx create --use
+          #else
+            #docker buildx create --use --name default
+          #fi
+          #docker buildx inspect default --bootstrap
 
-      - name: Build and Push falae-app
-        run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/amd64,linux/arm64 --push
+      #- name: Build and Push falae-app
+        #run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/amd64,linux/arm64 --push
 
-      - name: Build and Push falae-nginx
-        run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/amd64,linux/arm64 --push
+      #- name: Build and Push falae-nginx
+        #run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/amd64,linux/arm64 --push
       
       - name: Create directory if not exists
         run: ssh aws-cloud "mkdir -p /home/ubuntu/falae/"
@@ -68,6 +68,8 @@ jobs:
         run: |
           scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/docker-compose.yml
           scp ./.docker/nginx/nginx.conf aws-cloud:/home/ubuntu/falae/nginx.conf
+          scp ./entrypoint.sh aws-cloud:/home/ubuntu/falae/entrypoint.sh
+          
 
       - name: Stop & Remove Docker Images and Containers
         run: |
