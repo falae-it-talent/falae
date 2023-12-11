@@ -5,10 +5,6 @@ on:
     branches:
       - ci-test-01 
   workflow_dispatch:
-    inputs:
-      manual-trigger:
-        description: 'Manual trigger for CI'
-        default: 'Run CI'
 
 jobs:
   CI-01:
@@ -35,12 +31,11 @@ jobs:
       - name: Set up Docker Compose for CI
         run: |
           docker-compose -f docker-compose.yml up -d
-          sleep 10  
+          sleep 10
 
       - name: Check Docker Containers
         run: docker-compose -f docker-compose.yml ps
 
-      - name: Run Tests
+      - name: Run Tests with Docker Compose
         run: |
-          bundle exec rspec || true
-
+          docker-compose run -e "RAILS_ENV=test" api bundle exec rspec spec
