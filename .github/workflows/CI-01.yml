@@ -35,7 +35,7 @@ jobs:
       - name: Set up Docker Compose for CI
         run: |
           docker-compose -f docker-compose.yml up -d
-          sleep 10  # Aguarde um tempo para garantir que os contêineres estejam completamente iniciados
+          sleep 10  
 
       - name: Check Docker Containers
         run: docker-compose -f docker-compose.yml ps
