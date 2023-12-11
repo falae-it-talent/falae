@@ -40,10 +40,7 @@ jobs:
       - name: Check Docker Containers
         run: docker-compose -f docker-compose.yml ps
 
-      - name: Restore Database and Run Tests
+      - name: Run Tests
         run: |
-          chmod +x restoreDB.sh
-          ./restoreDB.sh dump.sql
-
           bundle exec rspec || true
 
