@@ -38,4 +38,4 @@ jobs:
 
       - name: Run Tests with Docker Compose
         run: |
-          docker-compose run -e "RAILS_ENV=test" api bundle exec rspec spec
+          docker-compose run -e "RAILS_ENV=test" app bundle exec rspec spec
