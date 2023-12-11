@@ -36,6 +36,6 @@ jobs:
       - name: Check Docker Containers
         run: docker-compose -f docker-compose.yml ps
 
-      - name: Run Tests with Docker Compose
+      - name: Run Tests 
         run: |
-          docker-compose run -e "RAILS_ENV=test" app bundle exec rspec spec
+           bundle exec rspec spec
