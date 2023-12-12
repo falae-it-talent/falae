@@ -1,6 +1,7 @@
 #language: pt
 
-  Funcionalidade: Visualizar Item
+  @visualizar
+  Funcionalidade: 7-Visualizar Item
 
     @cenario_50
     Cenario: 50 - Visualizar item voltar

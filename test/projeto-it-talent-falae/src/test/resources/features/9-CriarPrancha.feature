@@ -1,6 +1,7 @@
 #language: pt
 
-  Funcionalidade: Criar Prancha
+  @criar_prancha
+  Funcionalidade: 9-Criar Prancha
 
     @cenario_56
     Cenario: 56 - Criar prancha com sucesso

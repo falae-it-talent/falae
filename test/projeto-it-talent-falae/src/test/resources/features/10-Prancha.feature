@@ -1,6 +1,6 @@
 #language: pt
 
-  Funcionalidade: Prancha
+  Funcionalidade: 10-Prancha
 
     @cenario_59
     Cenario: 59 - Apagar Prancha

@@ -1,5 +1,7 @@
 #language: pt
-  Funcionalidade: Criar Pagina
+
+  @criarPagina
+  Funcionalidade: 12-Criar Pagina
 
     @cenario_68
     Cenario: 68 - Criar pagina com sucesso
@@ -32,7 +34,7 @@
       Dado que o usuario esteja na pagina sobre do site FALAE
       E o usuario está logado no sistema
       E o usuario clicar no link "Pranchas"
-      E o usuario clicar na prancha
+      E o usuario selecinar a prancha
       E o usuario clicar no botao do "Criar Página"
       Quando o usuario preencher o campo nome ja em uso
       E o usuario preencher o campo colunas

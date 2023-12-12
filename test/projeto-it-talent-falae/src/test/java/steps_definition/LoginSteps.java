@@ -1,6 +1,7 @@
 package steps_definition;
 
 import base.BaseSteps;
+import io.cucumber.java.pt.Dado;
 import io.cucumber.java.pt.Então;
 import io.cucumber.java.pt.Quando;
 import org.junit.Assert;
@@ -36,14 +37,15 @@ public class LoginSteps extends BaseSteps {
         page.escreverSenha("12345");
     }
 
-    @Quando("o usuario preencher o campo email do login um email não ativo")
-    public void o_usuario_preencher_o_campo_email_do_login_um_email_não_ativo() {
-       page.escreverEmail("teste@teste.com");
-    }
+
 
     @Então("o sistema exibe uma mensagem de ativacao no login: {string}")
     public void o_sistema_exibe_uma_mensagem_de_ativacao_no_login(String msg) {
         Assert.assertEquals(msg, loginPage.msgDeAtivacaoLogin());
         screenshot();
+    }
+    @Dado("o usuario clicar no link  {string}")
+    public void o_usuario_clicar_no_link(String string) {
+
     }
 }

@@ -1,6 +1,7 @@
 #language: pt
 
-  Funcionalidade: Pagina
+  @pagina
+  Funcionalidade: 13-Pagina
 
     @cenario_77
     Cenario: 77 - Apagar pagina

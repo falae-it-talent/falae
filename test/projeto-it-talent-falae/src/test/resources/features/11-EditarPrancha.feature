@@ -1,6 +1,6 @@
 #language: pt
 
-  Funcionalidade: Editar Prancha
+  Funcionalidade: 11-Editar Prancha
 
     @cenario_65
     Cenario: 65 - Editar prancha com sucesso
@@ -29,7 +29,7 @@
       Dado que o usuario esteja na pagina sobre do site FALAE
       E o usuario está logado no sistema
       E o usuario clicar no link "Pranchas"
-      E o usuario clicar na prancha
+      E o usuario selecionar a prancha
       E o usuario clicar no botao do "Editar"
       Quando o usuario preencher o campo nome do editar prancha
       E o usuario selecionar outra pagina inicial

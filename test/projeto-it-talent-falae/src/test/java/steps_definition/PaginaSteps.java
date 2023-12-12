@@ -23,7 +23,6 @@ public class PaginaSteps extends BaseSteps {
 
     @Quando("o usuario clicar em confirmar")
     public void o_usuario_clicar_em_confirmar() {
-
         page.clicarApagar();
     }
 

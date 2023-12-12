@@ -1,5 +1,7 @@
 #language: pt
-  Funcionalidade: Criar itens
+
+  @criar_itens
+  Funcionalidade: 5-Criar itens
 
     @cenario_44
     Cenario: 44 - Criar item sem imagem

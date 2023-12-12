@@ -158,4 +158,8 @@ public class CadastroDeUsuarioSteps  extends BaseSteps {
        page.escreverCofirmEmail("testesfalae@gmail.com");
     }
 
+    @Quando("o usuario preencher o campo email do login um email não ativo")
+    public void o_usuario_preencher_o_campo_email_do_login_um_email_não_ativo() {
+        page.escreverEmail(email);
+    }
 }

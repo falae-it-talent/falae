@@ -1,6 +1,7 @@
 #language: pt
 
-  Funcionalidade: Listar Itens
+  @listar_itens
+  Funcionalidade: 8-Listar Itens
 
     @cenario_53
     Cenario: 53 - Listar itens com sucesso

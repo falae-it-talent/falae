@@ -1,6 +1,7 @@
 #language: pt
 
-  Funcionalidade: Editar Itens
+  @editar_itens
+  Funcionalidade: 6-Editar Itens
 
     @cenario_47
     Cenario: 47 - Editar item com nome em branco

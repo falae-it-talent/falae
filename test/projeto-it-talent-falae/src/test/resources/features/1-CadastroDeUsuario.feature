@@ -1,6 +1,6 @@
 #language: pt
 
-Funcionalidade: Cadastro de usuario
+Funcionalidade: 1-Cadastro de usuario
 
   @cenario_1
   Cenario: 01 - Cadastro de usuário com sucesso
