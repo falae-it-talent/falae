@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:8
+        image: mysql:8.0.34
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: ${{ secrets.DB_NAME }}
@@ -28,6 +28,11 @@ jobs:
         with:
           bundler-cache: true
 
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
+
       - name: Setup test database
         env:
           RAILS_ENV: test
@@ -37,7 +42,7 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_HOST: ${{ secrets.DB_HOST }}
         run: |
-          bin/rails db:setup
+          bundle exec bin/rails db:setup
 
       - name: Run tests
-        run: bin/rspec
+        run: bundle exec bin/rspec
