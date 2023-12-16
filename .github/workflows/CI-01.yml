@@ -1,29 +1,66 @@
-name: CI
-
+name: "Ruby on Rails CI"
 on:
   push:
-    branches:
-      - ci-test-01 
-  workflow_dispatch:
-
+    branches: [ "ci-test-01" ]
 jobs:
-  CI-01:
+  CI:
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0.34
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: rails_test
+          MYSQL_USER: rails
+          MYSQL_PASSWORD: password
+        ports:
+          - "3306:3306"
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+    env:
+      DB_USER: rails
+      DB_PASSWORD: password
+      DB_NAME: rails_test
+      DB_HOST: localhost
+      DB_PORT: 3306
+      RAILS_ENV: test
+    
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
+        
+      # Add or replace dependency steps here
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
-          ruby-version: '3.0.6'
-
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
-
+          bundler-cache: true
+          
+      # Add or replace database setup steps here
+      - name: Set up database schema
+        run: bin/rails db:schema:load
+        
+      # Add or replace test runners here
       - name: Run RSpec tests
-        run: |
-          bundle exec rspec
+        run: bin/rspec
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Install Ruby and gems
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
+        with:
+          bundler-cache: true
+          
+      # Add or replace any other lints here
+      - name: Security audit dependencies
+        run: bin/bundler-audit --update
+        
+      - name: Security audit application code
+        run: bin/brakeman -q -w2
+        
+      - name: Lint Ruby files
+        run: bin/rubocop --parallel
