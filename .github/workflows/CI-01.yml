@@ -2,7 +2,7 @@ name: "Ruby on Rails CI"
 
 on:
   push:
-    branches: ["ci-cd"]
+    branches: ["ci-test-01"]
 
 jobs:
   CI:
