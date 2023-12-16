@@ -28,13 +28,11 @@ jobs:
         with:
           bundler-cache: true
 
-      - name: Install dependencies
-        run: |
-          gem install bundler
-          bundle install
+      - name: Install Bundler
+        run: gem install bundler
           
-      - name: Check for missing gems
-        run: bundle check || bundle install
+      - name: Install dependencies
+        run: bundle install
 
 
       # - name: Setup test database
