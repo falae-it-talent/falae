@@ -32,6 +32,10 @@ jobs:
         run: |
           gem install bundler
           bundle install
+          
+      - name: Check for missing gems
+        run: bundle check || bundle install
+
 
       # - name: Setup test database
       #   env:
