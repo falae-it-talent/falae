@@ -9,10 +9,6 @@ on:
 jobs:
   CI-01:
     runs-on: ubuntu-latest
-    env:
-      DB_USER: ${{ secrets.DB_USER }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      DB_NAME: ${{ secrets.DB_NAME }}
 
     steps:
       - name: Checkout
@@ -28,14 +24,5 @@ jobs:
           gem install bundler
           bundle install
 
-      - name: Set up Docker Compose for CI
-        run: |
-          docker-compose -f docker-compose.yml up -d
-          sleep 10
-
-      - name: Check Docker Containers
-        run: docker-compose -f docker-compose.yml ps
-
-      - name: Run Tests 
-        run: |
-           bundle exec rspec spec
+      - name: Run RSpec tests
+        run: bin/rspec
