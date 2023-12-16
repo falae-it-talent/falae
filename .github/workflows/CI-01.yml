@@ -25,4 +25,5 @@ jobs:
           bundle install
 
       - name: Run RSpec tests
-        run: bin/rspec
+        run: |
+          bundle exec rspec
