@@ -1,40 +1,28 @@
-name: "Ruby on Rails CI"
+name: CI
 
 on:
   push:
-    branches: ["ci-test-01"]
+    branches:
+      - ci-test-01
 
 jobs:
-  CI:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@v1
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
           bundler-cache: true
 
-      - name: Set up database schema
+      - name: Install dependencies
         run: |
-          bin/rails db:schema:load
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          RAILS_ENV: development
+          gem install bundler
+          bundle install
 
       - name: Run tests
         run: |
-          bin/rake
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          RAILS_ENV: test
+          bundle exec rspec
