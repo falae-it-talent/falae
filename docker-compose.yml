@@ -8,10 +8,10 @@ services:
       - falae-net
     env_file:
       - ./.env
+    platform: linux/arm/v5
     volumes:
       - mysql-data:/var/lib/mysql
       - image-data:/images
-
 
   proxy:
     depends_on:

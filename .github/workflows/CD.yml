@@ -1,106 +1,105 @@
-name: CD
+# name: CD
 
-on:
-  push:
-    branches:
-      - ci-test-01
-  workflow_dispatch:
-  
-env:
-   DB_USER: ${{ secrets.DB_USER }}
-   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-   DB_NAME: ${{ secrets.DB_NAME }}
-   DB_HOST: ${{ secrets.DB_HOST }}
-   DB_PORT: ${{ secrets.DB_PORT }}
-   RAILS_ENV: ${{ secrets.RAILS_ENV }}
-   SENDGRID_APIKEY: ${{ secrets.SENDGRID_APIKEY }}
-   FALAE_IMAGES_PATH: ${{ secrets.FALAE_IMAGES_PATH }}
-   SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
+# on:
+#   push:
+#     branches:
+#       - ci-test-01
+#   workflow_dispatch:
 
-jobs:
-  CD:
-    #if: github.event.workflow_run.conclusion == 'success'
-    runs-on: ubuntu-latest
+# env:
+#    DB_USER: ${{ secrets.DB_USER }}
+#    DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+#    DB_NAME: ${{ secrets.DB_NAME }}
+#    DB_HOST: ${{ secrets.DB_HOST }}
+#    DB_PORT: ${{ secrets.DB_PORT }}
+#    RAILS_ENV: ${{ secrets.RAILS_ENV }}
+#    SENDGRID_APIKEY: ${{ secrets.SENDGRID_APIKEY }}
+#    FALAE_IMAGES_PATH: ${{ secrets.FALAE_IMAGES_PATH }}
+#    SECRET_KEY_BASE: ${{ secrets.SECRET_KEY_BASE }}
 
-    steps:
-      - name: Configure SSH AWS
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
-          chmod 600 ~/.ssh/aws-cloud.key
-          cat >>~/.ssh/config <<END
-          Host aws-cloud
-            HostName $SSH_HOST
-            User $SSH_USER
-            IdentityFile ~/.ssh/aws-cloud.key
-            StrictHostKeyChecking no
-          END
-        env:
-          SSH_USER: ${{ secrets.AWS_SSH_USER }}
-          SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
-          SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
+# jobs:
+#   CD:
+#     #if: github.event.workflow_run.conclusion == 'success'
+#     runs-on: ubuntu-latest
 
-      - name: Checkout repository
-        uses: actions/checkout@v3
+#     steps:
+#       - name: Configure SSH AWS
+#         run: |
+#           mkdir -p ~/.ssh/
+#           echo "$SSH_KEY" > ~/.ssh/aws-cloud.key
+#           chmod 600 ~/.ssh/aws-cloud.key
+#           cat >>~/.ssh/config <<END
+#           Host aws-cloud
+#             HostName $SSH_HOST
+#             User $SSH_USER
+#             IdentityFile ~/.ssh/aws-cloud.key
+#             StrictHostKeyChecking no
+#           END
+#         env:
+#           SSH_USER: ${{ secrets.AWS_SSH_USER }}
+#           SSH_KEY: ${{ secrets.AWS_SSH_KEY }}
+#           SSH_HOST: ${{ secrets.AWS_SSH_HOST }}
 
-      - name: Create directory if not exists
-        run: ssh aws-cloud "mkdir -p /home/ubuntu/falae/"
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 
-      - name: Create .env file remotely
-        run: |
-          ssh aws-cloud "echo 'DB_USER=${DB_USER}' > /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'DB_NAME=${DB_NAME}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'DB_PASSWORD=${DB_PASSWORD}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'DB_HOST=${DB_HOST}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'DB_PORT=${DB_PORT}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'RAILS_ENV=${RAILS_ENV}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'SENDGRID_APIKEY=${SENDGRID_APIKEY}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'FALAE_IMAGES_PATH=${FALAE_IMAGES_PATH}' >> /home/ubuntu/falae/.env"
-          ssh aws-cloud "echo 'SECRET_KEY_BASE=${SECRET_KEY_BASE}' >> /home/ubuntu/falae/.env"
+#       - name: Create directory if not exists
+#         run: ssh aws-cloud "mkdir -p /home/ubuntu/falae/"
 
-      - name: Login DockerHub
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
-      
-      - name: Update Buildx
-        run: docker buildx install
+#       - name: Create .env file remotely
+#         run: |
+#           ssh aws-cloud "echo 'DB_USER=${DB_USER}' > /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'DB_NAME=${DB_NAME}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'DB_PASSWORD=${DB_PASSWORD}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'DB_HOST=${DB_HOST}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'DB_PORT=${DB_PORT}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'RAILS_ENV=${RAILS_ENV}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'SENDGRID_APIKEY=${SENDGRID_APIKEY}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'FALAE_IMAGES_PATH=${FALAE_IMAGES_PATH}' >> /home/ubuntu/falae/.env"
+#           ssh aws-cloud "echo 'SECRET_KEY_BASE=${SECRET_KEY_BASE}' >> /home/ubuntu/falae/.env"
 
-      - name: Set up Buildx
-        run: |
-          if docker buildx inspect default; then
-            docker buildx create --use
-          else
-            docker buildx create --use --name default
-          fi
-          docker buildx inspect default --bootstrap
+#       - name: Login DockerHub
+#         env:
+#           DOCKER_USER: ${{ secrets.DOCKER_USER }}
+#           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#         run: echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
 
-      - name: Build and Push falae-app
-        run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/amd64,linux/arm64 --push
+#       - name: Update Buildx
+#         run: docker buildx install
 
-      - name: Build and Push falae-nginx
-        run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/amd64,linux/arm64 --push
- 
-      - name: Copy docker-compose.yml to the instance
-        run: |
-          scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/docker-compose.yml
-          
-          # scp ./.docker/nginx/nginx.conf aws-cloud:/home/ubuntu/falae/nginx.conf
-          # scp ./entrypoint.sh aws-cloud:/home/ubuntu/falae/entrypoint.sh
-          
+#       - name: Set up Buildx
+#         run: |
+#           if docker buildx inspect default; then
+#             docker buildx create --use
+#           else
+#             docker buildx create --use --name default
+#           fi
+#           docker buildx inspect default --bootstrap
 
-      - name: Stop & Remove Docker Images and Containers
-        run: |
-          ssh aws-cloud "cd /home/ubuntu/falae/ && sudo docker compose down --rmi all"
-          ssh aws-cloud "sleep 10"
+#       - name: Build and Push falae-app
+#         run: docker buildx build . -t 'falaeittalent/falae-app:latest' --platform linux/amd64,linux/arm64 --push
 
-      - name: Pull latest Docker images
-        run: |
-          ssh aws-cloud "sudo docker compose -f /home/ubuntu/falae/docker-compose.yml pull"
+#       - name: Build and Push falae-nginx
+#         run: docker buildx build . -t 'falaeittalent/falae-nginx:latest' --platform linux/amd64,linux/arm64 --push
 
-      - name: Deploy Application
-        run: |
-          ssh aws-cloud "sudo docker compose -f /home/ubuntu/falae/docker-compose.yml up -d"
-          ssh aws-cloud "sleep 20"
-         
+#       - name: Copy docker-compose.yml to the instance
+#         run: |
+#           scp ./docker-compose.yml aws-cloud:/home/ubuntu/falae/docker-compose.yml
+
+#           # scp ./.docker/nginx/nginx.conf aws-cloud:/home/ubuntu/falae/nginx.conf
+#           # scp ./entrypoint.sh aws-cloud:/home/ubuntu/falae/entrypoint.sh
+
+#       - name: Stop & Remove Docker Images and Containers
+#         run: |
+#           ssh aws-cloud "cd /home/ubuntu/falae/ && sudo docker compose down --rmi all"
+#           ssh aws-cloud "sleep 10"
+
+#       - name: Pull latest Docker images
+#         run: |
+#           ssh aws-cloud "sudo docker compose -f /home/ubuntu/falae/docker-compose.yml pull"
+
+#       - name: Deploy Application
+#         run: |
+#           ssh aws-cloud "sudo docker compose -f /home/ubuntu/falae/docker-compose.yml up -d"
+#           ssh aws-cloud "sleep 20"
+
