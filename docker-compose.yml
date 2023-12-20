@@ -8,7 +8,7 @@ services:
       - falae-net
     env_file:
       - ./.env
-    platform: linux/arm/v5
+    platform: linux/arm64
     volumes:
       - mysql-data:/var/lib/mysql
       - image-data:/images
