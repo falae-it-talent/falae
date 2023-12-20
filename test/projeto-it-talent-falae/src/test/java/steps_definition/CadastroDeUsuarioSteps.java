@@ -17,6 +17,7 @@ public class CadastroDeUsuarioSteps  extends BaseSteps {
 
     private String aleatorio = (new SimpleDateFormat("dd-MMM-yyyy-HH-mm-ss")).format(new Date());
     private String email = "teste" + aleatorio+"@teste.com";
+    private String emailLogin = "teste" + aleatorio+"@teste.com";
 
 
 
@@ -160,6 +161,14 @@ public class CadastroDeUsuarioSteps  extends BaseSteps {
 
     @Quando("o usuario preencher o campo email do login um email não ativo")
     public void o_usuario_preencher_o_campo_email_do_login_um_email_não_ativo() {
-        page.escreverEmail(email);
+        page.clicarLink("Cadastrar");
+        page.escreverNome("teste"+aleatorio);
+        page.escreverSobrenome("HP");
+        page.escreverEmail(emailLogin);
+        page.escreverCofirmEmail(emailLogin);
+        page.escreverSenha("123456");
+        page.escreverConfirmSenha("123456");
+        page.botaoCriar();
+        page.escreverEmail(emailLogin);
     }
 }
