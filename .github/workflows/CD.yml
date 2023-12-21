@@ -51,6 +51,8 @@ jobs:
 
       - name: Deploy
         run: |
-          ssh aws-cloud docker compose -f falae/docker-compose.yml down
-          ssh aws-cloud docker compose -f falae/docker-compose.yml pull
-          ssh aws-cloud docker compose -f falae/docker-compose.yml up -d
+          ssh awa-cloud cd falae
+          ssh git pull
+          ssh aws-cloud docker compose docker-compose.yml down
+          ssh aws-cloud docker compose docker-compose.yml pull
+          ssh aws-cloud docker compose docker-compose.yml up -d
