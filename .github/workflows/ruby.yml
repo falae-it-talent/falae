@@ -25,4 +25,4 @@ jobs:
     - name: Install Dependencies and Run Tests
       run: |
         bundle install --jobs 4 --retry 3
-        bundle exec rake spec
+        bundle exec rspec
