@@ -2,9 +2,9 @@ name: Test
 
 on:
   push:
-    branches: [ "ci-test-01" ]
+    branches: [ "lucasarags-patch-1" ]
   pull_request:
-    branches: [ "ci-test-01" ]
+    branches: [ "master" ]
 
 permissions:
   contents: read
