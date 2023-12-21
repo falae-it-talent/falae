@@ -34,7 +34,7 @@ class Item < ApplicationRecord
     image_id = attributes[:id]
     if image_id.present?
       img = Image.find_by(id: image_id)
-      update image: img
+      self.image = img
     end
     super
   end
