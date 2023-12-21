@@ -49,15 +49,6 @@ jobs:
           push: true
           tags: falaeittalent/falae-app
 
-      - name: Build and Push Docker Image Nginx
-        uses: docker/build-push-action@v5
-        with:
-          context: ./.docker/nginx
-          file: ./.docker/nginx/Dockerfile
-          platforms: linux/amd64,linux/arm64/v6
-          push: true
-          tags: falaeittalent/falae-nginx
-
       - name: Deploy
         run: |
           ssh aws-cloud docker compose -f falae/docker-compose.yml down

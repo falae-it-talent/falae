@@ -13,11 +13,13 @@ services:
       - image-data:/images
 
   proxy:
+    image: nginx:1.25.2-alpine
     depends_on:
       - app
     restart: unless-stopped
     container_name: proxy_falae
-    image: falaeittalent/falae-nginx
+    volumes:
+      - ./.docker/nginx/conf:/etc/nginx/conf.d
     ports:
       - "80:80"
     networks:
