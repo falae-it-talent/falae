@@ -21,6 +21,11 @@ jobs:
       with:
         ruby-version: '3.0.6'
         bundler-cache: true 
+
+    - name: Install MySQL
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y mysql-server
         
     - name: Install Dependencies and Run Tests
       run: |
